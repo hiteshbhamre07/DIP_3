@@ -6,6 +6,8 @@ CRM-DIP3 is a Django-based web application built for managing campaign deliverie
 
 ## 📂 Project Structure
 
+
+
 Data_CRM-DIP3/
 ├── apps/
 │   ├── authentication/
@@ -25,6 +27,9 @@ Data_CRM-DIP3/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+
+
+
 
 
 
