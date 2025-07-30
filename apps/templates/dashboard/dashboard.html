@@ -1,0 +1,242 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <b>Dashboard{% if uploaded_filename %} - {{ uploaded_filename }}{% endif %}</b>
+        </h2>
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            {% csrf_token %}
+            <label class="btn btn-sm btn-outline-primary mb-0">
+                Upload File
+                <input type="file" name="excel_file" id="fileInput" accept=".xlsx,.xls,.csv"
+                       style="display: none;" onchange="document.getElementById('uploadForm').submit();">
+            </label>
+        </form>
+    </div>
+
+    {% if metrics %}
+    <div class="row text-white mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary shadow">
+                <div class="card-body text-center">
+                    <h5>Total Leads</h5><h3>{{ metrics.total_leads }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success shadow">
+                <div class="card-body text-center">
+                    <h5>Delivered</h5><h3>{{ metrics.delivered }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info shadow">
+                <div class="card-body text-center">
+                    <h5>Accepted</h5><h3>{{ metrics.accepted }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger shadow">
+                <div class="card-body text-center">
+                    <h5>Rejected</h5><h3>{{ metrics.rejected }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if charts %}
+    <div class="row mb-5" id="dashboardReport">
+        <div class="col-md-6 mb-4 d-flex flex-column align-items-center">
+            <div style="width: 100%; max-width: 350px;">
+                <canvas id="statusPieChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4"><canvas id="assetsBarChart"></canvas></div>
+        <div class="col-md-6 mb-4"><canvas id="raPerformanceChart"></canvas></div>
+        <div class="col-md-6 mb-4"><canvas id="campaignTrendChart"></canvas></div>
+        {% if rejection_labels and rejection_values %}
+        <div class="col-md-12 mb-4"><canvas id="rejectionBarChart"></canvas></div>
+        {% endif %}
+    </div>
+
+    <div class="text-center mb-4">
+        <button class="btn btn-outline-success" onclick="downloadDashboardReport()">Download Full Dashboard Report</button>
+    </div>
+    {% endif %}
+</div>
+
+<!-- JS Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+{% if charts %}
+<script>
+    const statusData = JSON.parse('{{ charts.status_distribution|safe }}' || '{}');
+    const assetData = JSON.parse('{{ charts.assets_vs_leads|safe }}' || '{}');
+    const raData = JSON.parse('{{ charts.ra_performance|safe }}' || '{}');
+    const trendData = JSON.parse('{{ charts.campaign_trend|safe }}' || '{}');
+    const rejectionLabels = JSON.parse('{{ rejection_labels|safe }}' || '[]');
+    const rejectionValues = JSON.parse('{{ rejection_values|safe }}' || '[]');
+
+    const ctx = (id) => document.getElementById(id);
+
+    function getPercentageData(data) {
+        const total = Object.values(data).reduce((a, b) => a + b, 0);
+        return Object.entries(data).map(([label, val]) => ({
+            label,
+            value: val,
+            percentage: total > 0 ? ((val / total) * 100).toFixed(1) + '%' : '0%'
+        }));
+    }
+
+    const piePercent = getPercentageData(statusData);
+
+    // Status Pie
+    new Chart(ctx('statusPieChart'), {
+        type: 'pie',
+        data: {
+            labels: piePercent.map(e => e.label),
+            datasets: [{
+                data: piePercent.map(e => e.value),
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Client Status Distribution' },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.label}: ${ctx.raw} (${piePercent[ctx.dataIndex].percentage})`
+                    }
+                },
+                datalabels: {
+                    color: '#fff',
+                    formatter: (val, ctx) => piePercent[ctx.dataIndex].percentage
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Assets vs Leads
+    new Chart(ctx('assetsBarChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(assetData),
+            datasets: [{
+                label: 'Leads',
+                data: Object.values(assetData),
+                backgroundColor: '#17a2b8'
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: {
+                title: { display: true, text: 'Assets vs Leads' },
+                datalabels: { anchor: 'end', align: 'right' }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // RA Performance
+    new Chart(ctx('raPerformanceChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(raData),
+            datasets: [{
+                label: 'Accepted Leads',
+                data: Object.values(raData),
+                backgroundColor: '#20c997'
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: {
+                title: { display: true, text: 'RA-wise Accepted Leads' },
+                datalabels: { anchor: 'end', align: 'right' }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Campaign Trend
+    new Chart(ctx('campaignTrendChart'), {
+        type: 'line',
+        data: {
+            labels: Object.keys(trendData),
+            datasets: [{
+                label: 'Leads',
+                data: Object.values(trendData),
+                borderColor: '#6610f2',
+                fill: false,
+                tension: 0.4
+            }]
+        },
+        options: {
+            plugins: {
+                title: { display: true, text: 'Leads Over Time' },
+                datalabels: false
+            },
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { beginAtZero: true, title: { display: true, text: 'Leads' } }
+            }
+        }
+    });
+
+    // Rejection Feedback
+    if (rejectionLabels.length > 0) {
+        new Chart(ctx('rejectionBarChart'), {
+            type: 'bar',
+            data: {
+                labels: rejectionLabels,
+                datasets: [{
+                    label: 'Rejected Leads',
+                    data: rejectionValues,
+                    backgroundColor: '#ff4d4f'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'Rejected Leads by Client Feedback' },
+                    datalabels: { anchor: 'end', align: 'top' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Rejections' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Feedback Category' }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    }
+
+    // Download dashboard as PDF
+    function downloadDashboardReport() {
+        const dashboard = document.getElementById('dashboardReport');
+        html2canvas(dashboard).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+            const width = pdf.internal.pageSize.getWidth();
+            const height = (canvas.height * width) / canvas.width;
+            pdf.addImage(imgData, 'PNG', 0, 10, width, height);
+            pdf.save('Dashboard_Report.pdf');
+        });
+    }
+</script>
+{% endif %}
+{% endblock %}

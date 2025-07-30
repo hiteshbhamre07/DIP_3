@@ -1,0 +1,70 @@
+<div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/assets/img/rover.jpg">
+  <div class="logo">
+    <a target="_blank" rel="noopener noreferrer" href="#" class="simple-text logo-normal">
+      Roverpath
+    </a>
+  </div>
+  <div class="sidebar-wrapper">
+    <ul class="nav">
+      {% if request.user.is_authenticated %}
+        <!-- Home Link -->
+        <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+          <a class="nav-link" href="/">
+            <i class="material-icons">home</i>
+            <p>Home</p>
+          </a>
+        </li>
+      <!-- Dashboard Link -->
+        <li class="nav-item {% if 'dashboard_home' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'dashboard_home' %}">
+            <i class="material-icons">dashboard</i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+
+        <!-- Suppression Link -->
+        <li class="nav-item {% if 'suppression' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'suppression_option' %}">
+            <i class="material-icons">grid_on</i>
+            <p>Suppression</p>
+          </a>
+        </li>
+
+
+        <!-- Reports Link -->
+        <li class="nav-item {% if 'reports' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'reports_option' %}">
+            <i class="material-icons">analytics</i>
+            <p>Reports</p>
+          </a>
+        </li>
+
+      <!--Transform Data -->
+      <li class="nav-item {% if 'transform_data' in segment %} active {% endif %}">
+        <a class="nav-link" href="{% url 'transform_data' %}">
+          <i class="material-icons">filter_alt</i>
+          <p>Transform Data</p>
+        </a>
+      </li>
+
+      <!-- Logout Link -->
+        <li class="nav-item">
+     <li class="nav-item">
+      <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="nav-link d-flex align-items-center " style="background: none; border: none; padding: 12px 20px; cursor: pointer;">
+          <span class="material-icons" style="margin-right: 20px; background: #f44336; color: white; border-radius: 50%; padding: 6px;">logout</span>
+          <p style="margin: ; color: #f44336; font-weight: 500;">Logout</p>
+        </button>
+      </form>
+    </li>
+
+
+
+      {% else %}
+        <!-- Login and Register Links for Unauthenticated Users -->
+
+      {% endif %}
+    </ul>
+  </div>
+</div>

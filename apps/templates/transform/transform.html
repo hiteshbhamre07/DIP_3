@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card shadow" style="width: 35rem;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4"><b>Transform & Clean Excel/CSV</b></h3>
+
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data" id="uploadForm" action="">
+                {% csrf_token %}
+                <div id="dropZone" class="border border-primary text-center p-4 rounded" style="cursor: pointer; position: relative;">
+                    <p class="mb-0">Drag & drop your Excel/CSV file here or click to select</p>
+                    <input type="file" name="excel_file" id="fileInput" accept=".xlsx,.xls,.csv"
+                           class="position-absolute w-100 h-100" style="opacity:0; top:0; left:0; cursor:pointer;" required>
+                </div>
+                <small id="file-name" class="form-text text-muted mt-2 text-center"></small>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Upload & Clean</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('file-name');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('bg-light');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('bg-light');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            fileNameDisplay.textContent = `Selected: ${fileInput.files[0].name}`;
+        }
+        dropZone.classList.remove('bg-light');
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = `Selected: ${fileInput.files[0].name}`;
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Upload CSV{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card shadow" style="width: 30rem;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Upload CSV File</h3>
+            <form action="{% url 'submit_report' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="file">Choose CSV File:</label>
+                    <input type="file" name="file" id="file" accept=".csv" class="form-control" required onchange="showFileName()">
+                    <small id="file-name" class="form-text text-muted mt-2"></small>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showFileName() {
+        const fileInput = document.getElementById('file');
+        const fileNameDisplay = document.getElementById('file-name');
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = `Selected file: ${fileInput.files[0].name}`;
+        } else {
+            fileNameDisplay.textContent = '';
+        }
+    }
+</script>
+{% endblock %}

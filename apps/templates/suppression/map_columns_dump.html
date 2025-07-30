@@ -1,0 +1,59 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Map Columns{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card mt-5 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Map Database Fields to CSV Columns</h4>
+        </div>
+        <div class="card-body">
+            {% if db_fields and csv_columns %}
+            <form method="post">
+                {% csrf_token %}
+
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Database Field</th>
+                                <th>CSV Column</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for db_field in db_fields %}
+                            <tr>
+                                <td><strong>{{ db_field }}</strong></td>
+                                <td>
+                                    <select name="{{ db_field }}" class="form-control">
+                                        <option value="">-- Select CSV Column --</option>
+                                        {% for csv_column in csv_columns %}
+                                        <option value="{{ csv_column }}">{{ csv_column }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-right">
+                    <button type="submit" class="btn btn-success">Submit Mapping</button>
+                </div>
+            </form>
+            {% else %}
+            <div class="alert alert-warning">
+                <strong>Warning:</strong> No database fields or CSV columns available for mapping. Please upload a file first.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

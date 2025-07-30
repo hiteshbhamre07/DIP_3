@@ -1,0 +1,155 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %}Report for {{ filename }}{% endblock %}
+
+{% block content %}
+<style>
+    /* Styling for Report Page */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    h1, h3 {
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        color: #0056b3; /* Deep blue for headers */
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-body {
+        padding: 15px;
+        background-color: #f8f9fa;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #343a40;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .analysis-text {
+        font-size: 1rem;
+        color: #555;
+        text-align: justify;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+
+    .img-fluid {
+        width: 100%;
+        height: auto;
+        border-bottom: 3px solid #ddd;
+    }
+
+    .row {
+        margin-bottom: 40px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .col-md-6 {
+        flex: 0 0 48%;
+        max-width: 48%;
+        margin-bottom: 20px;
+    }
+
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <h3>Report for {{ filename }}</h3>
+
+    <h3 class="text-secondary mb-4">Visualizations</h3>
+
+    <!-- First Row: Allocation and Promotion -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <img src="{{ MEDIA_URL }}uploads/reports/allocation_vs_pacing.png" alt="Allocation vs Pacing" class="img-fluid">
+                <div class="card-body">
+                    <h5 class="card-title">Allocation vs Pacing</h5>
+                    <p class="analysis-text">{{ analyses.allocation_vs_pacing }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <img src="{{ MEDIA_URL }}uploads/reports/asset_promotion_split.png" alt="Asset Promotion Split" class="img-fluid">
+                <div class="card-body">
+                    <h5 class="card-title">Asset Promotion Split</h5>
+                    <p class="analysis-text">{{ analyses.asset_promotion_split }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Row: Geo and Allocation -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <img src="{{ MEDIA_URL }}uploads/reports/geo_vs_asset_promotions.png" alt="Geo vs Asset Promotions" class="img-fluid">
+                <div class="card-body">
+                    <h5 class="card-title">Geo vs Asset Promotions</h5>
+                    <p class="analysis-text">{{ analyses.geo_vs_asset_promotions }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <img src="{{ MEDIA_URL }}uploads/reports/asset_allocation.png" alt="Asset Allocation" class="img-fluid">
+                <div class="card-body">
+                    <h5 class="card-title">Asset Allocation</h5>
+                    <p class="analysis-text">{{ analyses.asset_allocation }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Row: Industry Distribution -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <img src="{{ MEDIA_URL }}uploads/reports/industry_distribution.png" alt="Industry Distribution" class="img-fluid">
+                <div class="card-body">
+                    <h5 class="card-title">Industry Distribution</h5>
+                    <p class="analysis-text">{{ analyses.industry_distribution }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'download_report_as_pdf' filename=filename %}" class="btn btn-primary">Download PDF</a>
+</div>
+
+
+
+{% endblock %}

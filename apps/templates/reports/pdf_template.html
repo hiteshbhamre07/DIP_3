@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Report</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px;">
+
+    <h1>{{ filename }} Report</h1>
+
+    <div style="margin-bottom: 20px;">
+        <h2>Allocation vs Pacing</h2>
+        <p>{{ analyses.allocation_vs_pacing }}</p>
+        <div style="text-align: center;">
+            <img src="{{ MEDIA_URL }}{{ image_paths.0 }}" alt="Allocation vs Pacing" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <h2>Asset Promotion Split</h2>
+        <p>{{ analyses.asset_promotion_split }}</p>
+        <div style="text-align: center;">
+            <img src="{{ MEDIA_URL }}{{ image_paths.1 }}" alt="Asset Promotion Split" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <h2>Geo vs Asset Promotions</h2>
+        <p>{{ analyses.geo_vs_asset_promotions }}</p>
+        <div style="text-align: center;">
+            <img src="{{ MEDIA_URL }}{{ image_paths.2 }}" alt="Geo vs Asset Promotions" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <h2>Asset Allocation</h2>
+        <p>{{ analyses.asset_allocation }}</p>
+        <div style="text-align: center;">
+            <img src="{{ MEDIA_URL }}{{ image_paths.3 }}" alt="Asset Allocation" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <h2>Industry Distribution</h2>
+        <p>{{ analyses.industry_distribution }}</p>
+        <div style="text-align: center;">
+            <img src="{{ MEDIA_URL }}{{ image_paths.4 }}" alt="Industry Distribution" style="max-width: 300px; height: auto; display: block; margin: 0 auto;">
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Suppression{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card card-profile">
+                <div class="card-body">
+                    <h3 class="card-category text-gray"><b>Master Suppression</b></h3>
+
+                    <!-- Download Button -->
+                    <a href="{% url 'suppression_master' %}" class="btn btn-primary mb-3">Show Suppression</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-profile">
+                <div class="card-body">
+                    <h3 class="card-category text-gray"><b>Suppression Data</b></h3>
+
+                    <!-- Download Button -->
+                    <a href="{% url 'download_suppression_csv' %}" class="btn btn-primary mb-3">Download</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-profile">
+                <div class="card-body">
+                    <h3 class="card-category text-gray"><b>Apply Suppression</b></h3>
+
+                    <!-- Download Button -->
+                    <a href="{% url 'upload_file' %}" class="btn btn-primary mb-3">Apply</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-profile">
+                <div class="card-body">
+                    <h3 class="card-category text-gray"><b>Update Suppression</b></h3>
+
+                    <a href="{% url 'upload_dump' %}" class="btn btn-primary mb-3">update</a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+

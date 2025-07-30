@@ -1,0 +1,88 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Map Columns{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0">Map Database Fields to CSV Columns</h4>
+        </div>
+        <div class="card-body">
+            {% if uploaded_fields and db_fields %}
+            <form method="post">
+                {% csrf_token %}
+
+                {% if error %}
+                <div class="alert alert-danger text-center">{{ error }}</div>
+                {% endif %}
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th class="text-center">Database Field</th>
+                                <th class="text-center">CSV Column</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for db_field in db_fields %}
+                            <tr>
+                                <td class="align-middle text-center">
+                                    <strong>{{ db_field }}</strong>
+                                </td>
+                                <td>
+                                    <select name="csv_mapping_{{ db_field }}" class="form-control">
+                                        <option value="">-- Select CSV Column --</option>
+                                        {% for csv_column in uploaded_fields %}
+                                        <option value="{{ csv_column }}">{{ csv_column }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-right mt-3">
+                    <button type="submit" class="btn btn-success">Submit Mapping</button>
+                </div>
+            </form>
+            {% else %}
+            <div class="alert alert-warning text-center mt-4">
+                <strong>Notice:</strong> No database fields or CSV columns found for mapping. Please upload a valid file to proceed.
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'upload_file' %}" class="btn btn-primary">Upload File</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function (event) {
+            let isValid = true;
+            const selects = form.querySelectorAll("select");
+            selects.forEach(select => {
+                if (select.value === "") {
+                    isValid = false;
+                    select.classList.add("is-invalid");
+                } else {
+                    select.classList.remove("is-invalid");
+                }
+            });
+            if (!isValid) {
+                event.preventDefault();
+                alert("Please map all database fields to CSV columns.");
+            }
+        });
+    });
+</script>
+
+{% endblock %}
+

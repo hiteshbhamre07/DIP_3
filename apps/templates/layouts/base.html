@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="/static/assets/img/favicon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <link rel="canonical" href='#'>
+
+  <title>
+    Roverpath - {% block title %}{% endblock %}
+  </title>
+
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+
+  <!-- Fonts and icons -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+
+  <!-- DataTables CSS (Global) -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+  <!-- CSS Files -->
+  <link href="/static/assets/css/material-dashboard.css?v=2.1.2" rel="stylesheet" />
+
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="/static/assets/demo/demo.css" rel="stylesheet" />
+
+  {% block stylesheets %}{% endblock %}
+
+</head>
+
+<body class="">
+  <div class="wrapper ">
+    {% include 'includes/sidebar.html' %}
+
+    <div class="main-panel">
+      {% include 'includes/navigation.html' %}
+
+      <div class="content">
+        <div class="container-fluid">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+
+      {% include 'includes/footer.html' %}
+    </div>
+  </div>
+
+  {% include 'includes/fixed-plugin.html' %}
+  {% include 'includes/scripts.html' %}
+  {% include 'includes/scripts-sidebar.html' %}
+
+  <!-- DataTables JS (Global) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+  <!-- Material Dashboard JS -->
+  <script src="/static/assets/js/material-dashboard.js?v=2.1.2"></script>
+
+  {% block javascripts %}{% endblock %}
+
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable globally for all tables
+      $('.display').DataTable();
+    });
+  </script>
+
+</body>
+</html>

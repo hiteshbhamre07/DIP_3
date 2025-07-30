@@ -1,0 +1,49 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}CSV Column Mapping{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center">CSV Column Mapping</h1>
+
+        <form method="post" action="{% url 'map_uploaded_columns' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="alert alert-info">
+                <p>Please map the columns from the uploaded CSV file to the corresponding database fields.</p>
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Database Field</th>
+                        <th>CSV Column</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for db_field in db_fields %}
+                    <tr>
+                        <td>{{ db_field }}</td>
+                        <td>
+                            <select name="{{ db_field }}" class="form-select">
+                                <option value="">-- Select CSV Column --</option>
+                                {% for csv_column in csv_columns %}
+                                <option value="{{ csv_column }}">{{ csv_column }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit Mapping</button>
+            </div>
+        </form>
+
+        <div class="mt-3 text-center">
+            <a href="{% url 'upload_file' %}" class="btn btn-secondary">Upload Another File</a>
+        </div>
+    </div>
+{% endblock %}
