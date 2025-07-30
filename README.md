@@ -6,17 +6,17 @@ Rover-DIP3 is a Django-based web application built for managing campaign deliver
 
 ## 📂 Project Structure
 
- Data_CRM-DIP3/
+Data_CRM-DIP3/
 ├── apps/
-│ ├── authentication/
-│ ├── dashboard/
-│ ├── home/
-│ ├── reports/
-│ ├── static/
-│ ├── suppression/
-│ ├── templates/
-│ ├── templatetags/
-│ └── transform/
+│   ├── authentication/
+│   ├── dashboard/
+│   ├── home/
+│   ├── reports/
+│   ├── static/
+│   ├── suppression/
+│   ├── templates/
+│   ├── templatetags/
+│   └── transform/
 ├── core/
 ├── media/
 ├── staticfiles/
