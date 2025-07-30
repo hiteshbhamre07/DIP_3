@@ -1,4 +1,4 @@
-# 🚀 Rover-DIP3
+# 🚀 Data_CRM-DIP3
 
 Rover-DIP3 is a Django-based web application built for managing campaign deliveries, lead tracking, and reporting via dashboards and CSV integrations.
 
